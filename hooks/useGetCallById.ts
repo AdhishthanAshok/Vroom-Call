@@ -1,5 +1,5 @@
-import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useEffect, useState } from "react";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 
 export const useGetCallById = (id: string | string[]) => {
   const [call, setCall] = useState<Call>();
@@ -9,17 +9,23 @@ export const useGetCallById = (id: string | string[]) => {
 
   useEffect(() => {
     if (!client) return;
-    // We can not write async function inside useEffect , unless we declare it as a new function
+
     const loadCall = async () => {
-      const { calls } = await client.queryCalls({
-        filter_conditions: {
-          id,
-        },
-      });
-      if (calls.length > 0) setCall(calls[0]);
+      try {
+        // https://getstream.io/video/docs/react/guides/querying-calls/#filters
+        const { calls } = await client.queryCalls({
+          filter_conditions: { id },
+        });
+
+        if (calls.length > 0) setCall(calls[0]);
+
+        setIsCallLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsCallLoading(false);
+      }
     };
 
-    setIsCallLoading(false);
     loadCall();
   }, [client, id]);
 
