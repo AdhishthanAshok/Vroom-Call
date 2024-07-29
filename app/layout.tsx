@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import "@stream-io/video-react-sdk/dist/css/styles.css";
+import "react-datePicker/dist/react-datePicker.css";
 
 import { Toaster } from "@/components/ui/toaster";
 
